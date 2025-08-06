@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { Dashboard } from '@app/Dashboard/Dashboard';
-import { Support } from '@app/Support/Support';
-import { GeneralSettings } from '@app/Settings/General/GeneralSettings';
-import { ProfileSettings } from '@app/Settings/Profile/ProfileSettings';
-import { NotFound } from '@app/NotFound/NotFound';
+import { Teams } from '@app/Teams/Teams';
 
 export interface IAppRoute {
   label?: string; // Excluding the label will exclude the route from the nav sidebar in AppLayout
@@ -26,38 +22,12 @@ export type AppRouteConfig = IAppRoute | IAppRouteGroup;
 
 const routes: AppRouteConfig[] = [
   {
-    element: <Dashboard />,
+    element: <Teams />,
     exact: true,
-    label: 'Dashboard',
+    label: 'Find Metrics by Team',
     path: '/',
-    title: 'PatternFly Seed | Main Dashboard',
-  },
-  {
-    element: <Support />,
-    exact: true,
-    label: 'Support',
-    path: '/support',
-    title: 'PatternFly Seed | Support Page',
-  },
-  {
-    label: 'Settings',
-    routes: [
-      {
-        element: <GeneralSettings />,
-        exact: true,
-        label: 'General',
-        path: '/settings/general',
-        title: 'PatternFly Seed | General Settings',
-      },
-      {
-        element: <ProfileSettings />,
-        exact: true,
-        label: 'Profile',
-        path: '/settings/profile',
-        title: 'PatternFly Seed | Profile Settings',
-      },
-    ],
-  },
+    title: 'PatternFly Seed | Find Metrics by Team',
+  }
 ];
 
 const flattenedRoutes: IAppRoute[] = routes.reduce(
@@ -70,7 +40,6 @@ const AppRoutes = (): React.ReactElement => (
     {flattenedRoutes.map(({ path, element }, idx) => (
       <Route path={path} element={element} key={idx} />
     ))}
-    <Route element={<NotFound />} />
   </Routes>
 );
 
