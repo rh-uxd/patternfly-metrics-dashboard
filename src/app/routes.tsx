@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { Dashboard } from '@app/Dashboard/Dashboard';
+import { Components } from '@app/Components/Components';
+import { Search } from '@app/Search/Search';
+import { Products } from '@app/Products/Products';
+import { Web } from '@app/Web/Web';
 import { Teams } from '@app/Teams/Teams';
+import { NotFound } from '@app/NotFound/NotFound';
 
 export interface IAppRoute {
   label?: string; // Excluding the label will exclude the route from the nav sidebar in AppLayout
@@ -22,12 +28,47 @@ export type AppRouteConfig = IAppRoute | IAppRouteGroup;
 
 const routes: AppRouteConfig[] = [
   {
+    element: <Dashboard />,
+    exact: true,
+    label: 'Dashboard',
+    path: '/',
+    title: 'PatternFly Metrics | Dashboard Home',
+  },
+  {
+    element: <Components />,
+    exact: true,
+    label: 'Component Metrics',
+    path: '/components',
+    title: 'PatternFly Metrics | Component Metrics',
+  },
+  {
+    element: <Products />,
+    exact: true,
+    label: 'Product Metrics',
+    path: '/products',
+    title: 'PatternFly Metrics | Product Metrics',
+  },
+  {
+    element: <Search />,
+    exact: true,
+    label: 'Search Metrics',
+    path: '/search',
+    title: 'PatternFly Metrics | Search Metrics',
+  },
+  {
+    element: <Web />,
+    exact: true,
+    label: 'Web Metrics',
+    path: '/web',
+    title: 'PatternFly Metrics | Web Metrics',
+  },
+  {
     element: <Teams />,
     exact: true,
-    label: 'Find Metrics by Team',
-    path: '/',
-    title: 'PatternFly Seed | Find Metrics by Team',
-  }
+    label: 'Team Metrics',
+    path: '/teams',
+    title: 'PatternFly Metrics | Team Metrics',
+  },
 ];
 
 const flattenedRoutes: IAppRoute[] = routes.reduce(
@@ -40,6 +81,7 @@ const AppRoutes = (): React.ReactElement => (
     {flattenedRoutes.map(({ path, element }, idx) => (
       <Route path={path} element={element} key={idx} />
     ))}
+    <Route element={<NotFound />} />
   </Routes>
 );
 
