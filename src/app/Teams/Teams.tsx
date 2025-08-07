@@ -6,7 +6,7 @@ import { InnerScrollContainer, Table, Tbody, Td, Th, Thead, Tr } from '@patternf
 interface DataUploadProps {
   value: string;
   setValue: (value: string) => void;
-  onDataParsed: (data: string) => void;
+  onDataParsed: (data: Array<string>) => void;
 }
 
 const DataUpload: React.FunctionComponent<DataUploadProps> = ({ value, setValue, onDataParsed }) => {
@@ -30,7 +30,7 @@ const DataUpload: React.FunctionComponent<DataUploadProps> = ({ value, setValue,
   const handleClear = (_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setFilename('');
     setValue('');
-    onDataParsed(''); // Clear the parsed data as well
+    onDataParsed([]); // Clear the parsed data as well
   };
 
   const handleFileReadStarted = (_event: DropEvent, _fileHandle: File) => {
@@ -61,50 +61,102 @@ const DataUpload: React.FunctionComponent<DataUploadProps> = ({ value, setValue,
   );
 };
 
-const columnNames = [
-  "Team Name",
-  "@patternfly/patternfly",
-  "@patternfly/quickstarts",
-  "@patternfly/react-catalog-view-extension",
-  "@patternfly/react-charts",
-  "@patternfly/react-code-editor",
-  "@patternfly/react-console",
-  "@patternfly/react-core",
-  "@patternfly/react-icons",
-  "@patternfly/react-inline-edit-extension",
-  "@patternfly/react-log-viewer",
-  "@patternfly/react-data-view",
-  "@patternfly/chatbot",
-  "@patternfly/virtual-assistant",
-  "@patternfly/react-component-groups",
-  "@patternfly/react-styles",
-  "@patternfly/react-table",
-  "@patternfly/react-tokens",
-  "@patternfly/react-topology",
-  "@patternfly/react-user-feedback",
-  "@patternfly/react-virtualized-extension",
-  "react"
-];
-
 interface TeamTableProps {
-  data: string;
-  hasRightBorder: boolean;
+  data: Array<string>;
 }
 
-const TeamTable: React.FunctionComponent<TeamTableProps> = ({ data, hasRightBorder }) => {
+const TeamTable: React.FunctionComponent<TeamTableProps> = ({ data }) => {
+  //const [activeSortIndex, setActiveSortIndex] = useState<number>(0);
+  //const [activeSortDirection, setActiveSortDirection] = useState<'asc' | 'desc'>('asc');
+
+  const columnNames = [
+    "Team Name",
+    "@patternfly/patternfly",
+    "@patternfly/quickstarts",
+    "@patternfly/react-catalog-view-extension",
+    "@patternfly/react-charts",
+    "@patternfly/react-code-editor",
+    "@patternfly/react-console",
+    "@patternfly/react-core",
+    "@patternfly/react-icons",
+    "@patternfly/react-inline-edit-extension",
+    "@patternfly/react-log-viewer",
+    "@patternfly/react-data-view",
+    "@patternfly/chatbot",
+    "@patternfly/virtual-assistant",
+    "@patternfly/react-component-groups",
+    "@patternfly/react-styles",
+    "@patternfly/react-table",
+    "@patternfly/react-tokens",
+    "@patternfly/react-topology",
+    "@patternfly/react-user-feedback",
+    "@patternfly/react-virtualized-extension",
+    "react"
+  ];
+  
+/*   const getSortableRowValues = (row: string): (string | number)[] => {
+    return ["Team Name", "@patternfly/patternfly", "@patternfly/quickstarts",
+      "@patternfly/react-catalog-view-extension", "@patternfly/react-charts",
+      "@patternfly/react-code-editor", "@patternfly/react-console", "@patternfly/react-core",
+      "@patternfly/react-icons", "@patternfly/react-inline-edit-extension",
+      "@patternfly/react-log-viewer", "@patternfly/react-data-view", "@patternfly/chatbot",
+      "@patternfly/virtual-assistant", "@patternfly/react-component-groups", "@patternfly/react-styles",
+      "@patternfly/react-table", "@patternfly/react-tokens", "@patternfly/react-topology",
+      "@patternfly/react-user-feedback", "@patternfly/react-virtualized-extension", "react"];
+  };
+  
+  let sortedTeams = Array.from(data);
+  if (activeSortIndex !== null) {
+    sortedTeams = data.sort((a, b) => {
+      const aValue = getSortableRowValues(a)[activeSortIndex];
+      const bValue = getSortableRowValues(b)[activeSortIndex];
+      if (typeof aValue === 'number') {
+        // Numeric sort
+        if (activeSortDirection === 'asc') {
+          return (aValue as number) - (bValue as number);
+        }
+        return (bValue as number) - (aValue as number);
+      } else {
+        // String sort
+        if (activeSortDirection === 'asc') {
+          return (aValue as string).localeCompare(bValue as string);
+        }
+        return (bValue as string).localeCompare(aValue as string);
+      }
+    });
+  }
+  
+  const getSortParams = (columnIndex: number): ThProps['sort'] => ({
+    sortBy: {
+      index: activeSortIndex,
+      direction: activeSortDirection,
+      defaultDirection: 'asc' // starting sort direction when first sorting a column. Defaults to 'asc'
+    },
+    onSort: (_event, index, direction) => {
+      setActiveSortIndex(index);
+      setActiveSortDirection(direction);
+    },
+    columnIndex
+  }); */
+
   return (
+    <InnerScrollContainer>
     <Table>
       <Thead>
         <Tr>
           {columnNames.map((column) => (
-            <Th hasRightBorder={hasRightBorder} key={column}>{column}</Th>
+            column === "Team Name" ? (
+              <Th isStickyColumn hasRightBorder key={column} modifier="wrap">{column}</Th>
+            ) : (
+              <Th key={column} modifier="wrap">{column}</Th>
+            )
           ))} 
         </Tr>
       </Thead>
       <Tbody>
         {Object.keys(data).map((teamName) => (
           <Tr key={teamName}>
-            <Td hasRightBorder={hasRightBorder}>{teamName}</Td>
+            <Td isStickyColumn hasRightBorder>{teamName}</Td>
             {columnNames.slice(1).map((packageName) => (
               <Td key={packageName}>
                 {data[teamName]?.[packageName]?.[0] || '-'}
@@ -114,14 +166,15 @@ const TeamTable: React.FunctionComponent<TeamTableProps> = ({ data, hasRightBord
         ))}
       </Tbody>
     </Table>
+    </InnerScrollContainer>
   );
 };
 
 const Teams: React.FunctionComponent = () => {
   const [uploadValue, setUploadValue] = useState('');
-  const [teamData, setTeamData] = useState('');
+  const [teamData, setTeamData] = useState<Array<string>>([]);
 
-  const handleDataParsed = (parsedData: string) => {
+  const handleDataParsed = (parsedData: Array<string>) => {
     setTeamData(parsedData);
   };
 
@@ -133,12 +186,9 @@ const Teams: React.FunctionComponent = () => {
         setValue={setUploadValue}
         onDataParsed={handleDataParsed}
       />
-      <InnerScrollContainer>
-        <TeamTable
-          data={teamData}
-          hasRightBorder={true}
-        />
-      </InnerScrollContainer>
+      <TeamTable
+        data={teamData}
+      />
     </PageSection>
   );
 };
